@@ -19,7 +19,7 @@ import dotenv from "dotenv";
 import { config } from "./config.js";
 import { Server } from "socket.io";
 import { initSocket } from "./connection/socket.js";
-import { db } from "./db/database.js";
+import { sequelize } from "./db/database.js";
 
 dotenv.config();
 
@@ -32,7 +32,9 @@ app.use((error, req, res, next) => {
   res.sendStatus(500);
 });
 
-db.getConnection().then();
+// db.getConnection().then();
 
-const server = app.listen(config.host.port);
-initSocket(server);
+sequelize.sync().then(() => {
+  const server = app.listen(config.host.port);
+  initSocket(server);
+});
