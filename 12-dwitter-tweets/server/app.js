@@ -19,7 +19,9 @@ import dotenv from "dotenv";
 import { config } from "./config.js";
 import { Server } from "socket.io";
 import { initSocket } from "./connection/socket.js";
-import { sequelize } from "./db/database.js";
+// import { sequelize } from "./db/database.js";
+import connect from "mongodb";
+import { connectDB } from "./database/database_seq.js";
 
 dotenv.config();
 
@@ -34,7 +36,15 @@ app.use((error, req, res, next) => {
 
 // db.getConnection().then();
 
-sequelize.sync().then(() => {
-  const server = app.listen(config.host.port);
-  initSocket(server);
-});
+// sequelize.sync().then(() => {
+//   const server = app.listen(config.host.port);
+//   initSocket(server);
+// });
+
+connectDB()
+  .then((client) => {
+    console.log(client);
+    const server = app.listen(config.host.port);
+    initSocket(server);
+  })
+  .catch(console.error);
