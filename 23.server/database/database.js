@@ -1,5 +1,5 @@
-import Mongoose from 'mongoose';
-import { config } from '../config.js';
+import Mongoose from "mongoose";
+import { config } from "../config.js";
 
 export async function connectDB() {
   return Mongoose.connect(config.db.host, {
@@ -10,16 +10,18 @@ export async function connectDB() {
 }
 
 export function useVirtualId(schema) {
-  schema.virtual('id').get(function () {
+  //_id > id
+  //_id를 string으로 변환해서 받는당
+  schema.virtual("id").get(function () {
     return this._id.toString();
   });
-  schema.set('toJSON', { virtuals: true });
-  schema.set('toOject', { virtuals: true });
+  //가상의 id 를 json으로 변환해서 받아야 id를 저장함
+  schema.set("toJSON", { virtuals: true });
+  schema.set("toOject", { virtuals: true });
 }
 
-// TODO(Ellie): Delete blow
-
 let db;
+
 export function getTweets() {
-  return db.collection('tweets');
+  return db.collection("tweets");
 }
